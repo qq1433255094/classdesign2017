@@ -1,0 +1,312 @@
+C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE LIB51
+OBJECT MODULE PLACED IN .\Objects\lib51.obj
+COMPILER INVOKED BY: d:\Keil_c51\C51\BIN\C51.EXE lib51.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\C51) DEBUG OBJECTEXTEND PRIN
+                    -T(.\Listings\lib51.lst) TABS(2) OBJECT(.\Objects\lib51.obj)
+
+line level    source
+
+   1          #include "lib51.h"
+   2          #include <REGX52.H>
+   3          #include "math.h"
+   4          #include <stdio.h>
+   5          /*
+   6          **name:Delayms()|Delayms(10);延时10ms
+   7          **para:n 延时的时间，单位ms
+   8          **return:non
+   9          **note:软件延时，精度较低
+  10          */
+  11          void Delayms(unsigned int n)    //@12.000MHz
+  12          {
+  13   1        unsigned char i, j;
+  14   1      
+  15   1        
+  16   1        i = 2;
+  17   1        j = 239;
+  18   1        while(n--){
+  19   2          do
+  20   2          {
+  21   3            while (--j);
+  22   3          } while (--i);
+  23   2        }
+  24   1      }
+  25          
+  26          
+  27          
+  28          #if USE_SEG
+              //使用数码管
+              char SEG_Cnt=0;
+              unsigned short SEG_Num=1234;
+              char SEG_Dot=-1;
+              /*
+              **name:SEG_Display()|SEG_Num=1234; SEG_Display(0);显示SEG_Num这个变量值的最后一位，显示哪�
+             -��位由参数n确定
+              **para:SEG_Num 要显示的数，为全局变量 |n 显示数的位置，0为个位，1为十位，2为百
+             -位，3为千位
+              **return:数码管显示
+              **note:为了方便动态显示特意写的函数，每次中断只要显示一位数，减少中断中的
+             -延时
+              */
+              void SEG_Display(unsigned char n)
+              {
+                unsigned short temp=SEG_Num; //取得要显示的数
+                unsigned char send=n; //取得要显示的位置
+                
+                while(send--) temp/=10; //将数值右移，把要显示的位调整到个位
+                temp=(temp%10); //求余，留下个位，即取出要显示的数值
+                
+                P3|=0xf0; //关闭所有的显示，高4位为显示控制，低电平选中相应的位置
+                
+                P0=SEG_DATA[temp]; //显示相应的数字
+                if(SEG_Dot==n) P0|=0x80; //显示小数点
+                
+C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 2   
+
+                P3&=(0x0f|0xff7f>>n); //显示在相应的位置上
+                
+              }
+              #endif
+  56          ////////////////////////////////////////////
+  57          #if USE_TIM0
+  58          unsigned int TIM0_Time;
+  59          void TIM0_init(unsigned int ms)
+  60          {
+  61   1        TIM0_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断
+  62   1        TMOD |= 0x01;                    //set timer0 as mode1 (16-bit)
+  63   1        TL0 = TIM0_Time;                     //initial timer0 low byte
+  64   1        TH0 = TIM0_Time >> 8;                //initial timer0 high byte
+  65   1        TR0 = 1;                        //timer0 start running
+  66   1        ET0 = 1;                        //enable timer0 interrupt
+  67   1        EA = 1;                         //open global interrupt switch
+  68   1      }
+  69          
+  70          //void TIM0_CallBack(void) {}
+  71          
+  72          
+  73          #if USE_SYST0 //使用系统时钟模式
+  74          unsigned long int SYS_Tim=0;
+  75          
+  76          /*
+  77          **name:Get_SysTime()|SYS_TIME=Get_SysTime();获取当前系统时间，单位为毫秒,从初始化TIM0开
+             -始为0ms
+  78          **para:non
+  79          **return:当前系统时间，最长为4294967295ms，约为49.7天
+  80          **note:需要打开定时器0中断，此库中即调用 TIM0_init()
+  81          */
+  82          unsigned long int Get_SysTime(void)
+  83          {
+  84   1        return SYS_Tim;
+  85   1      }
+  86          
+  87          /*
+  88          **name:Delay()|Delay(1); 延时1ms
+  89          **para:n 延时时间，单位ms
+  90          **return:non
+  91          **note:需要打开定时器0中断，此库中即调用 TIM0_init()
+  92          */
+  93          void Delay(unsigned int n)
+  94          {
+  95   1        unsigned long int time=Get_SysTime();
+  96   1        while((Get_SysTime()-time)<n)
+  97   1        {
+  98   2          //可以添加一些在延时时执行的程序，执行时间不要大于1ms
+  99   2        }
+ 100   1      }
+ 101          
+ 102          /*
+ 103          **name: tm0_isr()|定时器0中断服务函数
+ 104          **para:non
+ 105          **return:non
+ 106          **note:默认设置为自动重载，每1ms中断一次，并将SYS_Tim加1，提供一个系统时钟
+ 107          */
+ 108          void tm0_isr() interrupt 1 using 1
+ 109          {
+ 110   1          TL0 = TIM0_Time;                     //reload timer0 low byte
+ 111   1          TH0 = TIM0_Time >> 8;                //reload timer0 high byte
+ 112   1        SYS_Tim++;
+C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 3   
+
+ 113   1      //  SEG_Cnt++;
+ 114   1      //  if(SEG_Cnt==4) SEG_Cnt=0;
+ 115   1      //  SEG_Display(SEG_Cnt);
+ 116   1      }
+ 117          #else  //使用外部定时调用模式，TIM0_CallBack()为外部声明的回调函数，外部未声明�
+             -��报错
+              extern void TIM0_CallBack(void);
+              /*
+              **name: tm0_isr()|定时器0中断服务函数
+              **para:non
+              **return:non
+              **note:默认设置为自动重载，按设定时间TIM0_Time中断，定时执行TIM0_CallBack()
+              */
+              void tm0_isr() interrupt 1 using 1
+              {
+                  TL0 = TIM0_Time;                     //reload timer0 low byte
+                  TH0 = TIM0_Time >> 8;                //reload timer0 high byte
+                TIM0_CallBack();
+              }
+              
+              #endif
+ 133          
+ 134          
+ 135          
+ 136          #endif
+ 137          ////////////////////////////////////////////
+ 138          #if USE_TIM1
+              unsigned int TIM1_Time;
+              void TIM1_init(unsigned int ms )
+              {
+                TIM1_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断
+                TMOD |= 0x10;                    //set timer0 as mode1 (16-bit)
+                TL1 = TIM1_Time;                     //initial timer0 low byte
+                TH1 = TIM1_Time >> 8;                //initial timer0 high byte
+                TR1 = 1;                        //timer0 start running
+                ET1 = 1;                        //enable timer0 interrupt
+                EA = 1;                         //open global interrupt switch
+              }
+              
+              //使用外部定时调用模式，TIM1_CallBack()为外部声明的回调函数，外部未声明将报�
+             -�
+              extern void TIM1_CallBack(void);
+              /*
+              **name: tm1_isr()|定时器1中断服务函数
+              **para:non
+              **return:non
+              **note:默认设置为自动重载，按设定时间TIM1_Time中断，定时执行TIM1_CallBack()
+              */
+              void tm1_isr() interrupt 3 using 1
+              {
+                  TL1 = TIM1_Time;                     //reload timer1 low byte
+                  TH1 = TIM1_Time >> 8;                //reload timer1 high byte
+                  TIM1_CallBack();
+              
+              }
+              #endif
+ 167          ////////////////////////////////////////////
+ 168          #if USE_UART
+ 169          #ifndef RAUD
+ 170            #define BAUD 9600       //UART baudrate
+ 171          #endif
+ 172          
+C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 4   
+
+ 173          /*Define UART parity mode*/
+ 174          #define NONE_PARITY     0   //None parity
+ 175          #define ODD_PARITY      1   //Odd parity
+ 176          #define EVEN_PARITY     2   //Even parity
+ 177          #define MARK_PARITY     3   //Mark parity
+ 178          #define SPACE_PARITY    4   //Space parity
+ 179          
+ 180          #define PARITYBIT NONE_PARITY   //Testing even parity
+ 181          
+ 182          unsigned char RX_Buff;
+ 183          bit busy;
+ 184          
+ 185          void UART_init(void)
+ 186          {
+ 187   1      #if (PARITYBIT == NONE_PARITY)
+ 188   1          SCON = 0x50;            //8-bit variable UART
+ 189   1      #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+                  SCON = 0xda;            //9-bit variable UART, parity bit initial to 1
+              #elif (PARITYBIT == SPACE_PARITY)
+                  SCON = 0xd2;            //9-bit variable UART, parity bit initial to 0
+              #endif
+ 194   1      //#if USE_PRINTF
+ 195   1      //   TI = 1;
+ 196   1      //#endif  
+ 197   1          TL2 = RCAP2L = (65536-(FOSC/32/BAUD)); //Set auto-reload vaule
+ 198   1          TH2 = RCAP2H = (65536-(FOSC/32/BAUD)) >> 8;
+ 199   1          T2CON = 0x34;           //Timer2 start run
+ 200   1          ES = 1;                 //Enable UART interrupt
+ 201   1          EA = 1;                 //Open master interrupt switch
+ 202   1      
+ 203   1      }
+ 204          
+ 205          
+ 206          void Uart_Isr() interrupt 4 using 1
+ 207          {
+ 208   1        
+ 209   1          if (RI)
+ 210   1          {
+ 211   2              RI = 0;             //Clear receive interrupt flag
+ 212   2              RX_Buff = SBUF;    
+ 213   2          
+ 214   2          }
+ 215   1          if (TI)
+ 216   1          {
+ 217   2              TI = 0;             //Clear transmit interrupt flag
+ 218   2              busy = 0;           //Clear transmit busy flag
+ 219   2          }
+ 220   1      }
+ 221          
+ 222          void SendData(unsigned char dat)
+ 223          {
+ 224   1          while (busy);           //Wait for the completion of the previous data is sent
+ 225   1          ACC = dat;              //Calculate the even parity bit P (PSW.0)
+ 226   1          if (P)                  //Set the parity bit according to P
+ 227   1          {
+ 228   2          #if (PARITYBIT == ODD_PARITY)
+                      TB8 = 0;            //Set parity bit to 0
+                  #elif (PARITYBIT == EVEN_PARITY)
+                      TB8 = 1;            //Set parity bit to 1
+                  #endif
+ 233   2          }
+ 234   1          else
+C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 5   
+
+ 235   1          {
+ 236   2          #if (PARITYBIT == ODD_PARITY)
+                      TB8 = 1;            //Set parity bit to 1
+                  #elif (PARITYBIT == EVEN_PARITY)
+                      TB8 = 0;            //Set parity bit to 0
+                  #endif
+ 241   2          }
+ 242   1          busy = 1;
+ 243   1          SBUF = ACC;             //Send data to UART buffer
+ 244   1      }
+ 245          
+ 246          void SendString(char *s)
+ 247          {
+ 248   1          while (*s)              //Check the end of the string
+ 249   1          {
+ 250   2              SendData(*s++);     //Send current char and increment string ptr
+ 251   2          }
+ 252   1      }
+ 253          
+ 254          void SendDatas(char *s,char len)
+ 255          {
+ 256   1        while(len--)
+ 257   1        {
+ 258   2          SendData(*s++);
+ 259   2        }
+ 260   1      }
+ 261          
+ 262          
+ 263          //int fputc(int ch, FILE *f)
+ 264          //{
+ 265          //  SendData(ch);
+ 266          //    return ch;
+ 267          //}
+ 268          
+ 269          #endif
+ 270          
+ 271          
+ 272          
+ 273          
+ 274          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    279    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      7      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

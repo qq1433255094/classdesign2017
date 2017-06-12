@@ -1,0 +1,57 @@
+C51 COMPILER V9.54   51LIB                                                                 06/28/2016 00:20:43 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE 51LIB
+OBJECT MODULE PLACED IN .\Objects\51lib.obj
+COMPILER INVOKED BY: D:\Keil_c51\C51\BIN\C51.EXE 51lib.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\C51) DEBUG OBJECTEXTEND PRIN
+                    -T(.\Listings\51lib.lst) TABS(2) OBJECT(.\Objects\51lib.obj)
+
+line level    source
+
+   1          #include "lib51.h"
+   2          #include "REG52.h"
+   3          
+   4          unsigned int TIM0_Time;
+   5          
+   6          void TIM0_init(unsigned int ms)
+   7          {
+   8   1          TIM0_Time=SysClock/1000*ms;
+   9   1          TMOD = 0x01;                    //set timer0 as mode1 (16-bit)
+  10   1          TL0 = TIM0_Time;                     //initial timer0 low byte
+  11   1          TH0 = TIM0_Time >> 8;                //initial timer0 high byte
+  12   1          TR0 = 1;                        //timer0 start running
+  13   1          ET0 = 1;                        //enable timer0 interrupt
+  14   1          EA = 1;                         //open global interrupt switch
+  15   1      }
+  16          
+  17          
+  18          
+  19          void TIM0_CallBack(void)
+  20          {
+  21   1        ;
+  22   1      } 
+  23          
+  24          
+  25          void tim0_interrupt() interrupt 1 using 1
+  26          {
+  27   1          TL0 = TIM0_Time;                     //reload timer0 low byte
+  28   1          TH0 = TIM0_Time >> 8;                //reload timer0 high byte
+  29   1          TIM0_CallBack();
+  30   1      }
+  31          
+  32          
+  33          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     49    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
