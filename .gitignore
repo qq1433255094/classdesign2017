@@ -49,5 +49,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+.vscode/
 *.pdsbak
 *.workspace
