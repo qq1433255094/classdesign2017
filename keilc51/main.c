@@ -2,9 +2,10 @@
 #include <REGX52.H>
 #include "lib51.h"
 
+
 void main()
 {
-	char i=0;
+	char i=0,j;
 	char dir=1;
 	short val = 0x0e38;
 	
