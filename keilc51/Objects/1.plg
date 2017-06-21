@@ -1,0 +1,125 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+D:\øŒ…Ëgit\classdesign2017\keilc51\1.uvproj
+Project File Date:  06/21/2017
+
+<h2>Output:</h2>
+compiling main.c...
+MAIN.C(9): error C141: syntax error near '{'
+MAIN.C(10): error C231: '__nop_': redefinition
+MAIN.C(10): error C231: '__nop_': redefinition
+MAIN.C(10): error C231: '__nop_': redefinition
+MAIN.C(10): error C231: '__nop_': redefinition
+MAIN.C(11): error C141: syntax error near '}'
+MAIN.C(12): error C129: missing ';' before 'data'
+main.c - 7 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(12): error C129: missing ';' before 'data'
+main.c - 1 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(12): error C129: missing ';' before 'data'
+main.c - 1 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(12): error C129: missing ';' before 'data'
+main.c - 1 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(12): error C129: missing ';' before 'data'
+main.c - 1 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(21): warning C206: 'Write_com': missing function-prototype
+MAIN.C(21): error C267: 'Write_com': requires ANSI-style prototype
+main.c - 1 Error(s), 1 Warning(s).
+compiling main.c...
+MAIN.C(19): warning C206: 'Write_com': missing function-prototype
+MAIN.C(19): error C267: 'Write_com': requires ANSI-style prototype
+main.c - 1 Error(s), 1 Warning(s).
+compiling main.c...
+MAIN.C(18): error C141: syntax error near 'else'
+main.c - 1 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(38): error C202: 'dat': undefined identifier
+MAIN.C(41): error C202: 'LCD_E': undefined identifier
+MAIN.C(42): error C202: 'LCD_E': undefined identifier
+MAIN.C(49): error C202: 'LCD_E': undefined identifier
+MAIN.C(50): error C202: 'LCD_E': undefined identifier
+MAIN.C(54): error C141: syntax error near '{'
+MAIN.C(57): error C141: syntax error near 'for'
+MAIN.C(57): error C141: syntax error near '=', expected ')'
+MAIN.C(57): error C129: missing ';' before '>'
+main.c - 9 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(55): error C141: syntax error near '{'
+MAIN.C(58): error C141: syntax error near 'for'
+MAIN.C(58): error C141: syntax error near '=', expected ')'
+MAIN.C(58): error C129: missing ';' before '>'
+main.c - 4 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(55): error C141: syntax error near '{'
+MAIN.C(58): error C141: syntax error near 'for'
+MAIN.C(58): error C141: syntax error near '=', expected ')'
+MAIN.C(58): error C129: missing ';' before '>'
+main.c - 4 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(55): error C141: syntax error near '{'
+MAIN.C(58): error C141: syntax error near 'for'
+MAIN.C(58): error C141: syntax error near '=', expected ')'
+MAIN.C(58): error C129: missing ';' before '>'
+main.c - 4 Error(s), 0 Warning(s).
+compiling main.c...
+main.c - 0 Error(s), 0 Warning(s).
+compiling main.c...
+main.c - 0 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(38): error C202: 'dat': undefined identifier
+MAIN.C(55): error C141: syntax error near '{'
+MAIN.C(58): error C141: syntax error near 'for'
+MAIN.C(58): error C141: syntax error near '=', expected ')'
+MAIN.C(58): error C129: missing ';' before '>'
+main.c - 5 Error(s), 0 Warning(s).
+compiling main.c...
+MAIN.C(55): error C141: syntax error near '{'
+MAIN.C(58): error C141: syntax error near 'for'
+MAIN.C(58): error C141: syntax error near '=', expected ')'
+MAIN.C(58): error C129: missing ';' before '>'
+main.c - 4 Error(s), 0 Warning(s).
+compiling main.c...
+main.c - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+compiling lib51.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAYMS?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TIM0_INIT?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?UART_INIT?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDSTRING?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDDATAS?LIB51
+Program Size: data=29.1 xdata=0 code=954
+creating hex file from ".\Objects\1"...
+".\Objects\1" - 0 Error(s), 6 Warning(s).
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAYMS?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TIM0_INIT?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?UART_INIT?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDSTRING?LIB51
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDDATAS?LIB51
+Program Size: data=29.1 xdata=0 code=963
+creating hex file from ".\Objects\1"...
+".\Objects\1" - 0 Error(s), 6 Warning(s).

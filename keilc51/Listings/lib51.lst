@@ -1,10 +1,10 @@
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 1   
+C51 COMPILER V9.01   LIB51                                                                 06/21/2017 10:48:59 PAGE 1   
 
 
-C51 COMPILER V9.56.0.0, COMPILATION OF MODULE LIB51
+C51 COMPILER V9.01, COMPILATION OF MODULE LIB51
 OBJECT MODULE PLACED IN .\Objects\lib51.obj
-COMPILER INVOKED BY: d:\Keil_c51\C51\BIN\C51.EXE lib51.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\C51) DEBUG OBJECTEXTEND PRIN
-                    -T(.\Listings\lib51.lst) TABS(2) OBJECT(.\Objects\lib51.obj)
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE lib51.c BROWSE INCDIR(..\C51) DEBUG OBJECTEXTEND PRINT(.\Listings\lib51.lst
+                    -) OBJECT(.\Objects\lib51.obj)
 
 line level    source
 
@@ -18,19 +18,19 @@ line level    source
    8          **return:non
    9          **note:软件延时，精度较低
   10          */
-  11          void Delayms(unsigned int n)    //@12.000MHz
+  11          void Delayms(unsigned int n)            //@12.000MHz
   12          {
-  13   1        unsigned char i, j;
+  13   1              unsigned char i, j;
   14   1      
-  15   1        
-  16   1        i = 2;
-  17   1        j = 239;
-  18   1        while(n--){
-  19   2          do
-  20   2          {
-  21   3            while (--j);
-  22   3          } while (--i);
-  23   2        }
+  15   1              
+  16   1              i = 2;
+  17   1              j = 239;
+  18   1              while(n--){
+  19   2                      do
+  20   2                      {
+  21   3                              while (--j);
+  22   3                      } while (--i);
+  23   2              }
   24   1      }
   25          
   26          
@@ -51,21 +51,21 @@ line level    source
               */
               void SEG_Display(unsigned char n)
               {
-                unsigned short temp=SEG_Num; //取得要显示的数
-                unsigned char send=n; //取得要显示的位置
-                
-                while(send--) temp/=10; //将数值右移，把要显示的位调整到个位
-                temp=(temp%10); //求余，留下个位，即取出要显示的数值
-                
-                P3|=0xf0; //关闭所有的显示，高4位为显示控制，低电平选中相应的位置
-                
-                P0=SEG_DATA[temp]; //显示相应的数字
-                if(SEG_Dot==n) P0|=0x80; //显示小数点
-                
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 2   
+                      unsigned short temp=SEG_Num; //取得要显示的数
+                      unsigned char send=n; //取得要显示的位置
+                      
+                      while(send--) temp/=10; //将数值右移，把要显示的位调整到个位
+                      temp=(temp%10); //求余，留下个位，即取出要显示的数值
+                      
+                      P3|=0xf0; //关闭所有的显示，高4位为显示控制，低电平选中相应的位置
+                      
+                      P0=SEG_DATA[temp]; //显示相应的数字
+                      if(SEG_Dot==n) P0|=0x80; //显示小数点
+                      
+C51 COMPILER V9.01   LIB51                                                                 06/21/2017 10:48:59 PAGE 2   
 
-                P3&=(0x0f|0xff7f>>n); //显示在相应的位置上
-                
+                      P3&=(0x0f|0xff7f>>n);   //显示在相应的位置上
+                      
               }
               #endif
   56          ////////////////////////////////////////////
@@ -73,13 +73,13 @@ line level    source
   58          unsigned int TIM0_Time;
   59          void TIM0_init(unsigned int ms)
   60          {
-  61   1        TIM0_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断
-  62   1        TMOD |= 0x01;                    //set timer0 as mode1 (16-bit)
-  63   1        TL0 = TIM0_Time;                     //initial timer0 low byte
-  64   1        TH0 = TIM0_Time >> 8;                //initial timer0 high byte
-  65   1        TR0 = 1;                        //timer0 start running
-  66   1        ET0 = 1;                        //enable timer0 interrupt
-  67   1        EA = 1;                         //open global interrupt switch
+  61   1              TIM0_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断
+  62   1              TMOD |= 0x01;                    //set timer0 as mode1 (16-bit)
+  63   1              TL0 = TIM0_Time;                     //initial timer0 low byte
+  64   1              TH0 = TIM0_Time >> 8;                //initial timer0 high byte
+  65   1              TR0 = 1;                        //timer0 start running
+  66   1              ET0 = 1;                        //enable timer0 interrupt
+  67   1              EA = 1;                         //open global interrupt switch
   68   1      }
   69          
   70          //void TIM0_CallBack(void) {}
@@ -97,7 +97,7 @@ line level    source
   81          */
   82          unsigned long int Get_SysTime(void)
   83          {
-  84   1        return SYS_Tim;
+  84   1              return SYS_Tim;
   85   1      }
   86          
   87          /*
@@ -108,11 +108,11 @@ line level    source
   92          */
   93          void Delay(unsigned int n)
   94          {
-  95   1        unsigned long int time=Get_SysTime();
-  96   1        while((Get_SysTime()-time)<n)
-  97   1        {
-  98   2          //可以添加一些在延时时执行的程序，执行时间不要大于1ms
-  99   2        }
+  95   1              unsigned long int time=Get_SysTime();
+  96   1              while((Get_SysTime()-time)<n)
+  97   1              {
+  98   2                      //可以添加一些在延时时执行的程序，执行时间不要大于1ms
+  99   2              }
  100   1      }
  101          
  102          /*
@@ -125,12 +125,12 @@ line level    source
  109          {
  110   1          TL0 = TIM0_Time;                     //reload timer0 low byte
  111   1          TH0 = TIM0_Time >> 8;                //reload timer0 high byte
- 112   1        SYS_Tim++;
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 3   
+ 112   1              SYS_Tim++;
+C51 COMPILER V9.01   LIB51                                                                 06/21/2017 10:48:59 PAGE 3   
 
- 113   1      //  SEG_Cnt++;
- 114   1      //  if(SEG_Cnt==4) SEG_Cnt=0;
- 115   1      //  SEG_Display(SEG_Cnt);
+ 113   1      //      SEG_Cnt++;
+ 114   1      //      if(SEG_Cnt==4) SEG_Cnt=0;
+ 115   1      //      SEG_Display(SEG_Cnt);
  116   1      }
  117          #else  //使用外部定时调用模式，TIM0_CallBack()为外部声明的回调函数，外部未声明�
              -��报错
@@ -145,7 +145,7 @@ line level    source
               {
                   TL0 = TIM0_Time;                     //reload timer0 low byte
                   TH0 = TIM0_Time >> 8;                //reload timer0 high byte
-                TIM0_CallBack();
+                      TIM0_CallBack();
               }
               
               #endif
@@ -158,13 +158,13 @@ line level    source
               unsigned int TIM1_Time;
               void TIM1_init(unsigned int ms )
               {
-                TIM1_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断
-                TMOD |= 0x10;                    //set timer0 as mode1 (16-bit)
-                TL1 = TIM1_Time;                     //initial timer0 low byte
-                TH1 = TIM1_Time >> 8;                //initial timer0 high byte
-                TR1 = 1;                        //timer0 start running
-                ET1 = 1;                        //enable timer0 interrupt
-                EA = 1;                         //open global interrupt switch
+                      TIM1_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断
+                      TMOD |= 0x10;                    //set timer0 as mode1 (16-bit)
+                      TL1 = TIM1_Time;                     //initial timer0 low byte
+                      TH1 = TIM1_Time >> 8;                //initial timer0 high byte
+                      TR1 = 1;                        //timer0 start running
+                      ET1 = 1;                        //enable timer0 interrupt
+                      EA = 1;                         //open global interrupt switch
               }
               
               //使用外部定时调用模式，TIM1_CallBack()为外部声明的回调函数，外部未声明将报�
@@ -187,10 +187,10 @@ line level    source
  167          ////////////////////////////////////////////
  168          #if USE_UART
  169          #ifndef RAUD
- 170            #define BAUD 9600       //UART baudrate
+ 170                  #define BAUD 9600       //UART baudrate
  171          #endif
  172          
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 4   
+C51 COMPILER V9.01   LIB51                                                                 06/21/2017 10:48:59 PAGE 4   
 
  173          /*Define UART parity mode*/
  174          #define NONE_PARITY     0   //None parity
@@ -214,8 +214,8 @@ line level    source
                   SCON = 0xd2;            //9-bit variable UART, parity bit initial to 0
               #endif
  194   1      //#if USE_PRINTF
- 195   1      //   TI = 1;
- 196   1      //#endif  
+ 195   1      //       TI = 1;
+ 196   1      //#endif        
  197   1          TL2 = RCAP2L = (65536-(FOSC/32/BAUD)); //Set auto-reload vaule
  198   1          TH2 = RCAP2H = (65536-(FOSC/32/BAUD)) >> 8;
  199   1          T2CON = 0x34;           //Timer2 start run
@@ -227,12 +227,12 @@ line level    source
  205          
  206          void Uart_Isr() interrupt 4 using 1
  207          {
- 208   1        
+ 208   1              
  209   1          if (RI)
  210   1          {
  211   2              RI = 0;             //Clear receive interrupt flag
  212   2              RX_Buff = SBUF;    
- 213   2          
+ 213   2                      
  214   2          }
  215   1          if (TI)
  216   1          {
@@ -247,21 +247,21 @@ line level    source
  225   1          ACC = dat;              //Calculate the even parity bit P (PSW.0)
  226   1          if (P)                  //Set the parity bit according to P
  227   1          {
- 228   2          #if (PARITYBIT == ODD_PARITY)
-                      TB8 = 0;            //Set parity bit to 0
-                  #elif (PARITYBIT == EVEN_PARITY)
-                      TB8 = 1;            //Set parity bit to 1
-                  #endif
+ 228   2                      #if (PARITYBIT == ODD_PARITY)
+                                              TB8 = 0;            //Set parity bit to 0
+                              #elif (PARITYBIT == EVEN_PARITY)
+                                              TB8 = 1;            //Set parity bit to 1
+                              #endif
  233   2          }
  234   1          else
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 5   
+C51 COMPILER V9.01   LIB51                                                                 06/21/2017 10:48:59 PAGE 5   
 
  235   1          {
- 236   2          #if (PARITYBIT == ODD_PARITY)
-                      TB8 = 1;            //Set parity bit to 1
-                  #elif (PARITYBIT == EVEN_PARITY)
-                      TB8 = 0;            //Set parity bit to 0
-                  #endif
+ 236   2                      #if (PARITYBIT == ODD_PARITY)
+                                              TB8 = 1;            //Set parity bit to 1
+                              #elif (PARITYBIT == EVEN_PARITY)
+                                              TB8 = 0;            //Set parity bit to 0
+                              #endif
  241   2          }
  242   1          busy = 1;
  243   1          SBUF = ACC;             //Send data to UART buffer
@@ -277,16 +277,16 @@ line level    source
  253          
  254          void SendDatas(char *s,char len)
  255          {
- 256   1        while(len--)
- 257   1        {
- 258   2          SendData(*s++);
- 259   2        }
+ 256   1              while(len--)
+ 257   1              {
+ 258   2                      SendData(*s++);
+ 259   2              }
  260   1      }
  261          
  262          
  263          //int fputc(int ch, FILE *f)
  264          //{
- 265          //  SendData(ch);
+ 265          //      SendData(ch);
  266          //    return ch;
  267          //}
  268          

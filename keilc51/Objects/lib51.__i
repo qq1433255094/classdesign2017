@@ -1,0 +1,1 @@
+"lib51.c" BROWSE INCDIR(..\C51) DEBUG OBJECTEXTEND PRINT(.\Listings\lib51.lst) OBJECT(.\Objects\lib51.obj)
