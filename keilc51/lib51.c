@@ -105,17 +105,21 @@ void Delay(unsigned int n)
 **return:non
 **note:默认设置为自动重载，每1ms中断一次，并将SYS_Tim加1，提供一个系统时钟
 */
+extern void TIM0_CallBack(void);
+
 void tm0_isr() interrupt 1 using 1
 {
     TL0 = TIM0_Time;                     //reload timer0 low byte
     TH0 = TIM0_Time >> 8;                //reload timer0 high byte
 	SYS_Tim++;
+	TIM0_CallBack();
 //	SEG_Cnt++;
 //	if(SEG_Cnt==4) SEG_Cnt=0;
 //	SEG_Display(SEG_Cnt);
 }
+
 #else  //使用外部定时调用模式，TIM0_CallBack()为外部声明的回调函数，外部未声明将报错
-extern void TIM0_CallBack(void);
+
 /*
 **name: tm0_isr()|定时器0中断服务函数
 **para:non
@@ -139,7 +143,7 @@ void tm0_isr() interrupt 1 using 1
 unsigned int TIM1_Time;
 void TIM1_init(unsigned int ms )
 {
-	TIM1_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断
+	TIM1_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断 1ms
 	TMOD |= 0x10;                    //set timer0 as mode1 (16-bit)
 	TL1 = TIM1_Time;                     //initial timer0 low byte
 	TH1 = TIM1_Time >> 8;                //initial timer0 high byte

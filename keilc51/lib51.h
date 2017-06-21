@@ -13,7 +13,7 @@
 
 #define USE_SYST0 	1	//使用定时器0产生全局时钟
 
-#define USE_TIM1	0	//使用定时器1
+#define USE_TIM1	1	//使用定时器1
 
 #define USE_UART	1	//使用串口
 

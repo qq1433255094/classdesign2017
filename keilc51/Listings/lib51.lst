@@ -1,4 +1,4 @@
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 1   
+C51 COMPILER V9.56.0.0   LIB51                                                             06/21/2017 14:50:44 PAGE 1   
 
 
 C51 COMPILER V9.56.0.0, COMPILATION OF MODULE LIB51
@@ -62,7 +62,7 @@ line level    source
                 P0=SEG_DATA[temp]; //显示相应的数字
                 if(SEG_Dot==n) P0|=0x80; //显示小数点
                 
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 2   
+C51 COMPILER V9.56.0.0   LIB51                                                             06/21/2017 14:50:44 PAGE 2   
 
                 P3&=(0x0f|0xff7f>>n); //显示在相应的位置上
                 
@@ -121,20 +121,24 @@ line level    source
  105          **return:non
  106          **note:默认设置为自动重载，每1ms中断一次，并将SYS_Tim加1，提供一个系统时钟
  107          */
- 108          void tm0_isr() interrupt 1 using 1
- 109          {
- 110   1          TL0 = TIM0_Time;                     //reload timer0 low byte
- 111   1          TH0 = TIM0_Time >> 8;                //reload timer0 high byte
- 112   1        SYS_Tim++;
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 3   
+ 108          extern void TIM0_CallBack(void);
+ 109          
+ 110          void tm0_isr() interrupt 1 using 1
+ 111          {
+ 112   1          TL0 = TIM0_Time;                     //reload timer0 low byte
+C51 COMPILER V9.56.0.0   LIB51                                                             06/21/2017 14:50:44 PAGE 3   
 
- 113   1      //  SEG_Cnt++;
- 114   1      //  if(SEG_Cnt==4) SEG_Cnt=0;
- 115   1      //  SEG_Display(SEG_Cnt);
- 116   1      }
- 117          #else  //使用外部定时调用模式，TIM0_CallBack()为外部声明的回调函数，外部未声明�
+ 113   1          TH0 = TIM0_Time >> 8;                //reload timer0 high byte
+ 114   1        SYS_Tim++;
+ 115   1        TIM0_CallBack();
+ 116   1      //  SEG_Cnt++;
+ 117   1      //  if(SEG_Cnt==4) SEG_Cnt=0;
+ 118   1      //  SEG_Display(SEG_Cnt);
+ 119   1      }
+ 120          
+ 121          #else  //使用外部定时调用模式，TIM0_CallBack()为外部声明的回调函数，外部未声明�
              -��报错
-              extern void TIM0_CallBack(void);
+              
               /*
               **name: tm0_isr()|定时器0中断服务函数
               **para:non
@@ -149,161 +153,161 @@ line level    source
               }
               
               #endif
- 133          
- 134          
- 135          
- 136          #endif
- 137          ////////////////////////////////////////////
- 138          #if USE_TIM1
-              unsigned int TIM1_Time;
-              void TIM1_init(unsigned int ms )
-              {
-                TIM1_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断
-                TMOD |= 0x10;                    //set timer0 as mode1 (16-bit)
-                TL1 = TIM1_Time;                     //initial timer0 low byte
-                TH1 = TIM1_Time >> 8;                //initial timer0 high byte
-                TR1 = 1;                        //timer0 start running
-                ET1 = 1;                        //enable timer0 interrupt
-                EA = 1;                         //open global interrupt switch
-              }
-              
-              //使用外部定时调用模式，TIM1_CallBack()为外部声明的回调函数，外部未声明将报�
+ 137          
+ 138          
+ 139          
+ 140          #endif
+ 141          ////////////////////////////////////////////
+ 142          #if USE_TIM1
+ 143          unsigned int TIM1_Time;
+ 144          void TIM1_init(unsigned int ms )
+ 145          {
+ 146   1        TIM1_Time=(unsigned short)(65536-SysClock*ms/12000); //设置为(ms)ms产生一次中断 1ms
+ 147   1        TMOD |= 0x10;                    //set timer0 as mode1 (16-bit)
+ 148   1        TL1 = TIM1_Time;                     //initial timer0 low byte
+ 149   1        TH1 = TIM1_Time >> 8;                //initial timer0 high byte
+ 150   1        TR1 = 1;                        //timer0 start running
+ 151   1        ET1 = 1;                        //enable timer0 interrupt
+ 152   1        EA = 1;                         //open global interrupt switch
+ 153   1      }
+ 154          
+ 155          //使用外部定时调用模式，TIM1_CallBack()为外部声明的回调函数，外部未声明将报�
              -�
-              extern void TIM1_CallBack(void);
-              /*
-              **name: tm1_isr()|定时器1中断服务函数
-              **para:non
-              **return:non
-              **note:默认设置为自动重载，按设定时间TIM1_Time中断，定时执行TIM1_CallBack()
-              */
-              void tm1_isr() interrupt 3 using 1
-              {
-                  TL1 = TIM1_Time;                     //reload timer1 low byte
-                  TH1 = TIM1_Time >> 8;                //reload timer1 high byte
-                  TIM1_CallBack();
-              
-              }
-              #endif
- 167          ////////////////////////////////////////////
- 168          #if USE_UART
- 169          #ifndef RAUD
- 170            #define BAUD 9600       //UART baudrate
- 171          #endif
- 172          
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 4   
+ 156          extern void TIM1_CallBack(void);
+ 157          /*
+ 158          **name: tm1_isr()|定时器1中断服务函数
+ 159          **para:non
+ 160          **return:non
+ 161          **note:默认设置为自动重载，按设定时间TIM1_Time中断，定时执行TIM1_CallBack()
+ 162          */
+ 163          void tm1_isr() interrupt 3 using 1
+ 164          {
+ 165   1          TL1 = TIM1_Time;                     //reload timer1 low byte
+ 166   1          TH1 = TIM1_Time >> 8;                //reload timer1 high byte
+ 167   1          TIM1_CallBack();
+ 168   1      
+ 169   1      }
+ 170          #endif
+ 171          ////////////////////////////////////////////
+ 172          #if USE_UART
+C51 COMPILER V9.56.0.0   LIB51                                                             06/21/2017 14:50:44 PAGE 4   
 
- 173          /*Define UART parity mode*/
- 174          #define NONE_PARITY     0   //None parity
- 175          #define ODD_PARITY      1   //Odd parity
- 176          #define EVEN_PARITY     2   //Even parity
- 177          #define MARK_PARITY     3   //Mark parity
- 178          #define SPACE_PARITY    4   //Space parity
- 179          
- 180          #define PARITYBIT NONE_PARITY   //Testing even parity
- 181          
- 182          unsigned char RX_Buff;
- 183          bit busy;
- 184          
- 185          void UART_init(void)
- 186          {
- 187   1      #if (PARITYBIT == NONE_PARITY)
- 188   1          SCON = 0x50;            //8-bit variable UART
- 189   1      #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
+ 173          #ifndef RAUD
+ 174            #define BAUD 9600       //UART baudrate
+ 175          #endif
+ 176          
+ 177          /*Define UART parity mode*/
+ 178          #define NONE_PARITY     0   //None parity
+ 179          #define ODD_PARITY      1   //Odd parity
+ 180          #define EVEN_PARITY     2   //Even parity
+ 181          #define MARK_PARITY     3   //Mark parity
+ 182          #define SPACE_PARITY    4   //Space parity
+ 183          
+ 184          #define PARITYBIT NONE_PARITY   //Testing even parity
+ 185          
+ 186          unsigned char RX_Buff;
+ 187          bit busy;
+ 188          
+ 189          void UART_init(void)
+ 190          {
+ 191   1      #if (PARITYBIT == NONE_PARITY)
+ 192   1          SCON = 0x50;            //8-bit variable UART
+ 193   1      #elif (PARITYBIT == ODD_PARITY) || (PARITYBIT == EVEN_PARITY) || (PARITYBIT == MARK_PARITY)
                   SCON = 0xda;            //9-bit variable UART, parity bit initial to 1
               #elif (PARITYBIT == SPACE_PARITY)
                   SCON = 0xd2;            //9-bit variable UART, parity bit initial to 0
               #endif
- 194   1      //#if USE_PRINTF
- 195   1      //   TI = 1;
- 196   1      //#endif  
- 197   1          TL2 = RCAP2L = (65536-(FOSC/32/BAUD)); //Set auto-reload vaule
- 198   1          TH2 = RCAP2H = (65536-(FOSC/32/BAUD)) >> 8;
- 199   1          T2CON = 0x34;           //Timer2 start run
- 200   1          ES = 1;                 //Enable UART interrupt
- 201   1          EA = 1;                 //Open master interrupt switch
- 202   1      
- 203   1      }
- 204          
- 205          
- 206          void Uart_Isr() interrupt 4 using 1
- 207          {
- 208   1        
- 209   1          if (RI)
- 210   1          {
- 211   2              RI = 0;             //Clear receive interrupt flag
- 212   2              RX_Buff = SBUF;    
- 213   2          
- 214   2          }
- 215   1          if (TI)
- 216   1          {
- 217   2              TI = 0;             //Clear transmit interrupt flag
- 218   2              busy = 0;           //Clear transmit busy flag
- 219   2          }
- 220   1      }
- 221          
- 222          void SendData(unsigned char dat)
- 223          {
- 224   1          while (busy);           //Wait for the completion of the previous data is sent
- 225   1          ACC = dat;              //Calculate the even parity bit P (PSW.0)
- 226   1          if (P)                  //Set the parity bit according to P
- 227   1          {
- 228   2          #if (PARITYBIT == ODD_PARITY)
+ 198   1      //#if USE_PRINTF
+ 199   1      //   TI = 1;
+ 200   1      //#endif  
+ 201   1          TL2 = RCAP2L = (65536-(FOSC/32/BAUD)); //Set auto-reload vaule
+ 202   1          TH2 = RCAP2H = (65536-(FOSC/32/BAUD)) >> 8;
+ 203   1          T2CON = 0x34;           //Timer2 start run
+ 204   1          ES = 1;                 //Enable UART interrupt
+ 205   1          EA = 1;                 //Open master interrupt switch
+ 206   1      
+ 207   1      }
+ 208          
+ 209          
+ 210          void Uart_Isr() interrupt 4 using 1
+ 211          {
+ 212   1        
+ 213   1          if (RI)
+ 214   1          {
+ 215   2              RI = 0;             //Clear receive interrupt flag
+ 216   2              RX_Buff = SBUF;    
+ 217   2          
+ 218   2          }
+ 219   1          if (TI)
+ 220   1          {
+ 221   2              TI = 0;             //Clear transmit interrupt flag
+ 222   2              busy = 0;           //Clear transmit busy flag
+ 223   2          }
+ 224   1      }
+ 225          
+ 226          void SendData(unsigned char dat)
+ 227          {
+ 228   1          while (busy);           //Wait for the completion of the previous data is sent
+ 229   1          ACC = dat;              //Calculate the even parity bit P (PSW.0)
+ 230   1          if (P)                  //Set the parity bit according to P
+ 231   1          {
+ 232   2          #if (PARITYBIT == ODD_PARITY)
                       TB8 = 0;            //Set parity bit to 0
                   #elif (PARITYBIT == EVEN_PARITY)
-                      TB8 = 1;            //Set parity bit to 1
-                  #endif
- 233   2          }
- 234   1          else
-C51 COMPILER V9.56.0.0   LIB51                                                             06/12/2017 15:23:53 PAGE 5   
+C51 COMPILER V9.56.0.0   LIB51                                                             06/21/2017 14:50:44 PAGE 5   
 
- 235   1          {
- 236   2          #if (PARITYBIT == ODD_PARITY)
+                      TB8 = 1;            //Set parity bit to 1
+                  #endif
+ 237   2          }
+ 238   1          else
+ 239   1          {
+ 240   2          #if (PARITYBIT == ODD_PARITY)
                       TB8 = 1;            //Set parity bit to 1
                   #elif (PARITYBIT == EVEN_PARITY)
                       TB8 = 0;            //Set parity bit to 0
                   #endif
- 241   2          }
- 242   1          busy = 1;
- 243   1          SBUF = ACC;             //Send data to UART buffer
- 244   1      }
- 245          
- 246          void SendString(char *s)
- 247          {
- 248   1          while (*s)              //Check the end of the string
- 249   1          {
- 250   2              SendData(*s++);     //Send current char and increment string ptr
- 251   2          }
- 252   1      }
- 253          
- 254          void SendDatas(char *s,char len)
- 255          {
- 256   1        while(len--)
- 257   1        {
- 258   2          SendData(*s++);
- 259   2        }
- 260   1      }
- 261          
- 262          
- 263          //int fputc(int ch, FILE *f)
- 264          //{
- 265          //  SendData(ch);
- 266          //    return ch;
- 267          //}
- 268          
- 269          #endif
- 270          
- 271          
+ 245   2          }
+ 246   1          busy = 1;
+ 247   1          SBUF = ACC;             //Send data to UART buffer
+ 248   1      }
+ 249          
+ 250          void SendString(char *s)
+ 251          {
+ 252   1          while (*s)              //Check the end of the string
+ 253   1          {
+ 254   2              SendData(*s++);     //Send current char and increment string ptr
+ 255   2          }
+ 256   1      }
+ 257          
+ 258          void SendDatas(char *s,char len)
+ 259          {
+ 260   1        while(len--)
+ 261   1        {
+ 262   2          SendData(*s++);
+ 263   2        }
+ 264   1      }
+ 265          
+ 266          
+ 267          //int fputc(int ch, FILE *f)
+ 268          //{
+ 269          //  SendData(ch);
+ 270          //    return ch;
+ 271          //}
  272          
- 273          
+ 273          #endif
  274          
+ 275          
+ 276          
+ 277          
+ 278          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    279    ----
+   CODE SIZE        =    379    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      7      10
+   DATA SIZE        =      9      10
    IDATA SIZE       =   ----    ----
    BIT SIZE         =      1    ----
 END OF MODULE INFORMATION.
