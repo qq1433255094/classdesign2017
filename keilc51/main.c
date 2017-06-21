@@ -45,15 +45,8 @@ void TIM1_CallBack(void)
 
 void main()
 {
-<<<<<<< HEAD
-	char i=0,j;
-	char dir=1;
-	short val = 0x0e38;
-	
-=======
 	short speed_val=0;
 
->>>>>>> 87ae38144cae0f11b9e45208839c1f9fe74043f4
 	UART_init();
 	TIM0_init(1);
 	TIM1_init(5);
